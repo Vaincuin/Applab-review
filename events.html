@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Events | AppLab</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+<nav aria-label="Main Navigation">
+<a href="index.html" class="logo-text">AppLab</a>
+<ul class="nav-links">
+<li><a href="index.html">Home</a></li>
+<li><a href="events.html" class="active">Events</a></li>
+<li><a href="courses.html">Courses</a></li>
+<li><a href="index.html#join" class="btn-primary">Join Discord</a></li>
+</ul>
+</nav>
+</header>
+<main>
+<section>
+<h2>Upcoming Community Events</h2>
+<p>Browse upcoming local meetups hosted by AppLab members, or submit your own event below.</p>
+<div class="calendar-placeholder" id="event-list">
+<div class="event-item">
+<h3>AI Model Showcase (Global Online)</h3>
+<p><strong>Date:</strong> 2026-11-28 | <strong>Host:</strong> AppLab Core Team</p>
+</div>
+<div class="event-item">
+<h3>Local AI Builder Meetup — Szczecin</h3>
+<p><strong>Date:</strong> 2026-12-02 | <strong>Host:</strong> Community Members</p>
+</div>
+</div>
+</section>
+<section id="submit-event">
+<h2>Host a Local Event (Exports CSV Record)</h2>
+<p>Fill out the form below to register an event announcement and download the CSV log.</p>
+<form id="eventForm" class="lab-form">
+<label for="organizer">Organizer Name</label>
+<input type="text" id="organizer" name="organizer" required placeholder="e.g., Alex Mercer">
+<label for="email">Contact Email</label>
+<input type="email" id="email" name="email" required placeholder="e.g., alex.mercer@applab.club">
+<label for="title">Event Title</label>
+<input type="text" id="title" name="title" required placeholder="e.g., AI Prompting Workshop">
+<label for="city">City / Location</label>
+<input type="text" id="city" name="city" required placeholder="e.g., Warsaw">
+<label for="date">Event Date</label>
+<input type="date" id="date" name="date" required>
+<button type="submit" class="btn-primary">Submit Event &amp; Download CSV</button>
+</form>
+<p id="statusMessage" role="status" style="margin-top: 1rem; font-weight: bold;"></p>
+</section>
+</main>
+<footer>
+<p class="footer-meta">&copy; 2026 AppLab (applab.club) | Version 1.0</p>
+</footer>
+<script>
+       document.getElementById('eventForm').addEventListener('submit', function(e) {
+           e.preventDefault();
+           const organizer = document.getElementById('organizer').value.trim();
+           const email = document.getElementById('email').value.trim();
+           const title = document.getElementById('title').value.trim();
+           const city = document.getElementById('city').value.trim();
+           const date = document.getElementById('date').value;
+           // Create CSV content
+           const headers = ['Organizer,Email,Event Title,City,Date'];
+           const row = [`"${organizer}","${email}","${title}","${city}","${date}"`];
+           const csvContent = "data:text/csv;charset=utf-8," + [headers, row].join("\n");
+           // Trigger CSV file download
+           const encodedUri = encodeURI(csvContent);
+           const link = document.createElement("a");
+           link.setAttribute("href", encodedUri);
+           link.setAttribute("download", "applab_event_record.csv");
+           document.body.appendChild(link);
+           link.click();
+           document.body.removeChild(link);
+           // Add event visually to the page list
+           const eventList = document.getElementById('event-list');
+           const newItem = document.createElement('div');
+           newItem.className = 'event-item';
+           newItem.innerHTML = `<h3>${title} (${city})</h3><p><strong>Date:</strong> ${date} | <strong>Host:</strong> ${organizer}</p>`;
+           eventList.appendChild(newItem);
+           document.getElementById('statusMessage').textContent = "Success! Event added and applab_event_record.csv downloaded.";
+           this.reset();
+       });
+</script>
+</body>
+</html>
